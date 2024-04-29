@@ -5,6 +5,7 @@ import wx.lib.scrolledpanel as scrolled
 from Cocoa import NSApp, NSApplication
 from DataManager import storage_manager
 from GUI.create_project import CreateProject
+from GUI.dialogs import show_modal_dialog
 
 class MainFrame(wx.Frame):
     '''Create the main frame for the GUI version of the application.'''
@@ -24,7 +25,7 @@ class MainFrame(wx.Frame):
         self.panel = wx.Panel(self)
         base_box = wx.BoxSizer(wx.HORIZONTAL)
         self.scrolled = scrolled.ScrolledPanel(self.panel)
-        self.scrolled_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.scrolled_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.scrolled.SetSizer(self.scrolled_sizer)
         right_box = wx.BoxSizer(wx.VERTICAL)
         
@@ -133,9 +134,10 @@ class MainFrame(wx.Frame):
 
     def load_project_buttons(self):
         self.scrolled_sizer.Clear(True)
+        vbox = wx.BoxSizer(wx.VERTICAL)
 
         create_btn = wx.Button(self.scrolled, -1, 'Create new project')
-        self.scrolled_sizer.Add(create_btn, flag=wx.EXPAND)
+        vbox.Add(create_btn, flag=wx.EXPAND)
         create_btn.Bind(wx.EVT_BUTTON, self.on_create_project)
 
         i = 0
@@ -143,12 +145,13 @@ class MainFrame(wx.Frame):
             border = 30 if i == 0 else 10
             btn = wx.Button(self.scrolled, -1, project)
             btn.Bind(wx.EVT_BUTTON, self._on_button_clicked)
-            self.scrolled_sizer.Add(btn, flag=wx.TOP | wx.EXPAND, border=border)
+            vbox.Add(btn, flag=wx.TOP | wx.EXPAND, border=border)
             i += 1
 
+        self.scrolled_sizer.Add(vbox)
+        self.scrolled_sizer.Add(wx.Size(5, 1))
         self.scrolled.SetupScrolling(scroll_x=False)
         self.Layout()
-        self.Refresh()
 
     def _on_button_clicked(self, event) -> None:
         name = event.GetEventObject().GetLabel()
@@ -158,6 +161,9 @@ class MainFrame(wx.Frame):
             with open(path, "r", encoding="utf-8") as f:
                 text = f.read()
                 data = json.loads(text)
+        else:
+            show_modal_dialog(self, 'Error loading project data. File project_settings.json not found.', 'File not found', wx.OK | wx.ICON_ERROR)
+            return
         
         self.project_st.SetLabel(data['name'])
         self.description_st.SetLabel(data['description'])
@@ -169,7 +175,8 @@ class MainFrame(wx.Frame):
     def on_create_project(self, event) -> None:
         create_window = CreateProject(self, [model for model in self.sm.app_data['models'].keys()])
         create_window.ShowModal()
-
+        print('aaaaaaaa')
+        
     def _open_project(self, event) -> None:
         pass
     

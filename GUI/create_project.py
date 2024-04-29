@@ -6,11 +6,10 @@ class CreateProject(wx.Dialog):
     '''Window presented to the user when he wants to create a new project.'''
 
     def __init__(self, parent: wx.Window, model_names: list[str]):
-        super().__init__(parent)
+        super().__init__(parent, title='Create new project')
 
         self.parent = parent
         self.model_names = model_names
-        self.SetTitle('Create new project')
 
         self._init_ui()
         self.SetSize((400, 330))
@@ -81,9 +80,10 @@ class CreateProject(wx.Dialog):
 
         status = sm.create_project_files(name, description, model)
         if status:
-            show_modal_dialog(self, 'Project created successfully', 'Success', wx.OK | wx.ICON_INFORMATION)
             self.parent.update_projects_entry()
+            show_modal_dialog(self, 'Project created successfully', 'Success', wx.OK | wx.ICON_INFORMATION)
         else:
             show_modal_dialog(self, 'Error creating the project', 'Error', wx.OK | wx.ICON_ERROR)
+            pass
         
-        self.Destroy()
+        self.Close()
