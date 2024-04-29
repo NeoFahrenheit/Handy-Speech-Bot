@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        "**.cfg": true,
+        "**.gitignore": true,
+        "**.env": true,
+        "**/bin": true,
+        "**/include": true,
+        "**/lib": true,
+        "**/share": true
+    }
+}

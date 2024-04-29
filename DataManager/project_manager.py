@@ -151,7 +151,7 @@ class ProjectManager():
 
 
 from storage_manager import StorageManager
-#info = StorageManager().create_project_files('testing', 'aaaaaaaaaa')
+#info = StorageManager().create_project_files('testing', 'aaaaaaaaaa', 'medium')
 m = ProjectManager('/Users/lmonteir/.HandySpeechBot', '/Users/lmonteir/.HandySpeechBot/projects/testing')
 m.get_audio_online('https://www.youtube.com/watch?v=_5u6XokSq4M')
 m.process_audios()

@@ -46,12 +46,13 @@ class StorageManager():
     def update_app_settings(self, dict_path: list[str]) -> bool:
         pass
 
-    def create_project_files(self, name: str, description: str) -> tuple[str, str] | None:
+    def create_project_files(self, name: str, description: str, model: str) -> tuple[str, str] | None:
         """Create the project files, given a name as typed by the user.
 
         Args:
             name (str): Name of the project, as typed by the user.
             description (str): Description of the project, as typed by the user.
+            model (str): Model chosen by the user.
 
         Returns:
             tuple[str, str] | None: Rreturns (Name, Path) or None, if any error occurred.
@@ -64,12 +65,13 @@ class StorageManager():
             os.makedirs(os.path.join(path, 'texts'))
             os.makedirs(os.path.join(path, 'audios'))
             os.makedirs(os.path.join(path, 'databases'))
-            settings_file_path = os.path.join(path, 'projects.json')
+            settings_file_path = os.path.join(path, 'project_settings.json')
             settings_file = {
                 "name": name,
                 "description": description,
                 "needs_processing": False,
                 "number_files": 0,
+                "model": model,
                 "path": path,
                 "created_at": datetime.now().strftime("%Y-%m-%d")
             }
@@ -81,6 +83,15 @@ class StorageManager():
             return (name, path)
         except:
             return None
+        
+    def delete_project_dir(self, name: str) -> None:
+        """Deletes a project folder.
+
+        Args:
+            name (str): The name of the project to be deleted, sanitized.
+        """        
+
+        os.removedirs(os.path.join(self.projects_path, name))
 
     def check_project_existence(self, project_name: str) -> bool:
         """Checks if the project exists created by checking if the folder.
@@ -155,3 +166,16 @@ class StorageManager():
 
         projects = [item for item in os.listdir(self.projects_path) if os.path.isdir(os.path.join(self.projects_path, item))]
         return projects
+    
+    def does_project_exists(self, name: str) -> bool:
+        """Checks if a project exists by searching the project dir for the sanitized name.
+
+        Args:
+            name (str): The name of the project to be looked for, sanitized.
+
+        Returns:
+            bool: Returns true if a project exists with the corresponding name. False otherwise.
+        """        
+
+        projects = self.get_projects()
+        return True if projects.count(name) > 0 else False
