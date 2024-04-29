@@ -1,0 +1,14 @@
+# Folders from venv
+/bin
+/include
+/lib
+/share
+
+# Files from venv
+*.cfg
+
+# Files from project
+*.env
+
+# Folders from project
+__pycache__/
