@@ -9,6 +9,7 @@
 
 # Files from project
 *.env
+*.DS_Store
 
 # Folders from project
 __pycache__/
