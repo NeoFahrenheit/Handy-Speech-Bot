@@ -46,11 +46,11 @@ class StorageManager():
     def update_app_settings(self, dict_path: list[str]) -> bool:
         pass
 
-    def create_project_files(self, name: str, description: str, model: str) -> tuple[str, str] | None:
+    def create_project_files(self, sanitized_name: str, description: str, model: str) -> tuple[str, str] | None:
         """Create the project files, given a name as typed by the user.
 
         Args:
-            name (str): Name of the project, as typed by the user.
+            name (sanitized_name): Name of the project, sanitized.
             description (str): Description of the project, as typed by the user.
             model (str): Model chosen by the user.
 
@@ -58,7 +58,6 @@ class StorageManager():
             tuple[str, str] | None: Rreturns (Name, Path) or None, if any error occurred.
         """        
 
-        sanitized_name = self.sanitize_folder_filename(name)
         try:
             path = os.path.join(self.projects_path, sanitized_name)
             os.makedirs(path)
@@ -67,7 +66,7 @@ class StorageManager():
             os.makedirs(os.path.join(path, 'databases'))
             settings_file_path = os.path.join(path, 'project_settings.json')
             settings_file = {
-                "name": name,
+                "name": sanitized_name,
                 "description": description,
                 "needs_processing": False,
                 "number_files": 0,
@@ -80,7 +79,7 @@ class StorageManager():
             with open(settings_file_path, 'w', encoding='utf-8') as f:
                 json.dump(settings_file, f, indent=4)
             
-            return (name, path)
+            return (sanitized_name, path)
         except:
             return None
         

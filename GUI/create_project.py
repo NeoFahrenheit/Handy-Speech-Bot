@@ -78,7 +78,7 @@ class CreateProject(wx.Dialog):
             show_modal_dialog(self, 'A project with this name already exists. Please, choose another one.', 'Project already exists', wx.OK | wx.ICON_ERROR)
             return
 
-        status = sm.create_project_files(name, description, model)
+        status = sm.create_project_files(sanitized_name, description, model)
         if status:
             self.parent.update_projects_entry()
             show_modal_dialog(self, 'Project created successfully', 'Success', wx.OK | wx.ICON_INFORMATION)

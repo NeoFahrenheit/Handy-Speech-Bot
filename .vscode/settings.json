@@ -5,7 +5,10 @@
         "**.env": true,
         "**/bin": true,
         "**/include": true,
+        "**/Include": true,
         "**/lib": true,
-        "**/share": true
+        "**/Lib": true,
+        "**/share": true,
+        "**/Scripts": true
     }
 }

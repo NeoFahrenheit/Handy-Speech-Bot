@@ -1,11 +1,16 @@
+import platform
 import json
 import os
 import wx
 import wx.lib.scrolledpanel as scrolled
-from Cocoa import NSApp, NSApplication
 from DataManager import storage_manager
 from GUI.create_project import CreateProject
+from GUI.project import Project
 from GUI.dialogs import show_modal_dialog
+
+system = platform.system()
+if system == 'Darwin':   # MacOS
+    from Cocoa import NSApp, NSApplication # type: ignore
 
 class MainFrame(wx.Frame):
     '''Create the main frame for the GUI version of the application.'''
@@ -18,7 +23,9 @@ class MainFrame(wx.Frame):
         self.project_names = self.sm.get_projects()
         self._init_gui()
         self.CreateStatusBar()
-        self.go_foreground()
+
+        if system == 'Darwin':
+            self._go_foreground()
     
 
     def _init_gui(self) -> None:
@@ -175,14 +182,15 @@ class MainFrame(wx.Frame):
     def on_create_project(self, event) -> None:
         create_window = CreateProject(self, [model for model in self.sm.app_data['models'].keys()])
         create_window.ShowModal()
-        print('aaaaaaaa')
         
     def _open_project(self, event) -> None:
-        pass
+        window = Project(self, '', '')
+        window.Show()
+        self.Hide()
     
     def _delete_project(self, event) -> None:
         pass
 
-    def go_foreground(self):
+    def _go_foreground(self):
         NSApplication.sharedApplication()
         NSApp().activateIgnoringOtherApps_(True)

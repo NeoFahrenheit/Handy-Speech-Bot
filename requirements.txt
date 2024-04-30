@@ -1,7 +1,7 @@
-pip install fastapi
-pip install langchain
-pip install langchain-openai
-pip install yt_dlp
-pip install pydub
-pip install librosa
-pip install transformers
+wxPython >= 4.2.1
+langchain >= 0.1.16
+langchain-openai >= 0.1.4
+yt_dlp >= 2024.4.9
+pydub
+librosa
+transformers >= 4.40.1
