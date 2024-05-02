@@ -12,24 +12,26 @@ class CreateProject(wx.Dialog):
         self.model_names = model_names
 
         self._init_ui()
-        self.SetSize((400, 330))
+        self.SetSize((400, 420))
         self.CenterOnParent()
 
     def _init_ui(self) -> None:
         '''Initializes the UI.'''
 
-        vbox = wx.BoxSizer(wx.VERTICAL)
-        padding = wx.BoxSizer(wx.VERTICAL)
         panel = wx.Panel(self)
 
         # -- Static Text -- #
         name_st = wx.StaticText(panel, -1, 'Project name:')
         description_st = wx.StaticText(panel, -1, 'Description (optional):')
-        models_st = wx.StaticText(panel, -1, 'Model:')
+        transformer_st = wx.StaticText(panel, -1, 'Default transformer:')
+        llm_st = wx.StaticText(panel, -1, 'Default LLM:')
+        database_st = wx.StaticText(panel, -1, 'Default database:')
 
         name_st.SetToolTip(wx.ToolTip('Name of the project. It should not contain special characters. If any is found, it will be removed.'))
         description_st.SetToolTip(wx.ToolTip('Project description. Opcional.'))
-        models_st.SetToolTip(wx.ToolTip('Model size to be used for this project. Models ended with ".en" can only recognize english. The smaller the sizer, it will be faster but less accurate.'))
+        transformer_st.SetToolTip(wx.ToolTip('Default transformer size to be used for this project. Models ended with ".en" can only recognize english. The smaller the sizer, it will be faster but less accurate.'))
+        llm_st.SetToolTip(wx.ToolTip('Default LLM to be used for this project.'))
+        database_st.SetToolTip(wx.ToolTip('Default database to be used for this project.'))
 
         # -- Text Ctrls -- #
         self.name_tc = wx.TextCtrl(panel)
@@ -37,39 +39,53 @@ class CreateProject(wx.Dialog):
 
         # -- Combo Boxes -- #
         self.models_cb = wx.ComboBox(panel, -1, self.model_names[0], choices=self.model_names, style=wx.CB_READONLY)
+        self.llm_cb = wx.ComboBox(panel, -1, 'llama-3', choices=['llama-3'], style=wx.CB_READONLY)
+        self.database_cb = wx.ComboBox(panel, -1, 'faiss', choices=['faiss'], style=wx.CB_READONLY)
 
         # -- Button -- #
         create_btn = wx.Button(panel, -1, 'Create project')
         create_btn.Bind(wx.EVT_BUTTON, self._create_project)
 
         # -- Sizer Setup -- #
+        padding = wx.BoxSizer(wx.VERTICAL)
         padding.Add(name_st)
         padding.Add(self.name_tc, flag=wx.TOP | wx.EXPAND, border=5)
         
         padding.Add(description_st, flag=wx.TOP, border=15)
         padding.Add(self.description_tc, flag=wx.TOP | wx.EXPAND, border=5)
         
-        padding.Add(models_st, flag=wx.TOP, border=15)
+        padding.Add(transformer_st, flag=wx.TOP, border=15)
         padding.Add(self.models_cb, flag=wx.TOP | wx.EXPAND, border=5)
+        
+        padding.Add(llm_st, flag=wx.TOP, border=15)
+        padding.Add(self.llm_cb, flag=wx.TOP | wx.EXPAND, border=5)
+        
+        padding.Add(database_st, flag=wx.TOP, border=15)
+        padding.Add(self.database_cb, flag=wx.TOP | wx.EXPAND, border=5)
         
         padding.Add(create_btn, flag=wx.TOP | wx.ALIGN_CENTER, border=30)
 
+        vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(padding, flag=wx.ALL | wx.EXPAND, border=10)
         panel.SetSizerAndFit(vbox)
 
     def _create_project(self, event) -> None:
         '''Create a new project.'''
 
-        name = self.name_tc.GetValue()
-        description = self.description_tc.GetValue()
+        name = self.name_tc.GetValue().strip()
+        description = self.description_tc.GetValue().strip()
         model = self.models_cb.GetValue()
 
-        if len(name) > 50:
-            show_modal_dialog(self, 'Name cannot be more than 50 characters', 'Length error', wx.OK | wx.ICON_ERROR)
+        if len(name) == 0:
+            show_modal_dialog(self, 'Name cannot be empty.', 'Empty name', wx.OK | wx.ICON_ERROR)
             return
         
-        if len(description) > 500:
-            show_modal_dialog(self, 'Description cannot be more than 500 characters', 'Length error', wx.OK | wx.ICON_ERROR)
+        if len(name) > 50:
+            show_modal_dialog(self, 'Name cannot be more than 50 characters.', 'Length error', wx.OK | wx.ICON_ERROR)
+            return
+        
+        if len(description) > 200:
+            show_modal_dialog(self, 'Description cannot be more than 200 characters.', 'Length error', wx.OK | wx.ICON_ERROR)
             return
         
         sm = StorageManager()

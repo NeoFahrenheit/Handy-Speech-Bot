@@ -59,8 +59,12 @@ class MainFrame(wx.Frame):
         self.description_st = wx.StaticText(self.panel, -1, 'Project description')
         self.files_st = wx.StaticText(self.panel, -1, 'Files: ')
         self.files_number_st = wx.StaticText(self.panel, -1, '0')
-        self.model_st = wx.StaticText(self.panel, -1, 'Model: ')
-        self.model_name_st = wx.StaticText(self.panel, -1, 'large-v3')
+        self.transformer_st = wx.StaticText(self.panel, -1, 'Default transformer: ')
+        self.transformer_name_st = wx.StaticText(self.panel, -1, 'large-v3')
+        self.llm_st = wx.StaticText(self.panel, -1, 'Default LLM: ')
+        self.llm_name_st = wx.StaticText(self.panel, -1, 'llama-3')
+        self.database_st = wx.StaticText(self.panel, -1, 'Default database: ')
+        self.database_name_st = wx.StaticText(self.panel, -1, 'faiss')
         self.date_st = wx.StaticText(self.panel, -1, 'Created at: ')
         self.date_value_st = wx.StaticText(self.panel, -1, '1900-01-01')
 
@@ -68,9 +72,17 @@ class MainFrame(wx.Frame):
         files_sizer.Add(self.files_st)
         files_sizer.Add(self.files_number_st, flag=wx.LEFT, border=5)
 
-        models_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        models_sizer.Add(self.model_st)
-        models_sizer.Add(self.model_name_st, flag=wx.LEFT, border=5)
+        transformer_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        transformer_sizer.Add(self.transformer_st)
+        transformer_sizer.Add(self.transformer_name_st, flag=wx.LEFT, border=5)
+        
+        llm_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        llm_sizer.Add(self.llm_st)
+        llm_sizer.Add(self.llm_name_st, flag=wx.LEFT, border=5)
+
+        database_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        database_sizer.Add(self.database_st)
+        database_sizer.Add(self.database_name_st, flag=wx.LEFT, border=5)
         
         date_sizer = wx.BoxSizer(wx.HORIZONTAL)
         date_sizer.Add(self.date_st)
@@ -85,12 +97,13 @@ class MainFrame(wx.Frame):
         delete_btn.Bind(wx.EVT_BUTTON, self._delete_project)
         buttons_sizer.Add(delete_btn, flag=wx.LEFT, border= 50)
 
-
         sizer.Add(self.project_st)
         sizer.Add(self.description_st, flag=wx.TOP, border=15)
-        sizer.Add(files_sizer, flag=wx.TOP, border=15)
-        sizer.Add(models_sizer, flag=wx.TOP, border=15)
-        sizer.Add(date_sizer, flag=wx.TOP, border=15)
+        sizer.Add(files_sizer, flag=wx.TOP, border=10)
+        sizer.Add(transformer_sizer, flag=wx.TOP, border=10)
+        sizer.Add(llm_sizer, flag=wx.TOP, border=10)
+        sizer.Add(database_sizer, flag=wx.TOP, border=10)
+        sizer.Add(date_sizer, flag=wx.TOP, border=10)
         sizer.Add(buttons_sizer, flag=wx.TOP | wx.ALIGN_CENTER, border=25)
 
 
@@ -175,7 +188,7 @@ class MainFrame(wx.Frame):
         self.project_st.SetLabel(data['name'])
         self.description_st.SetLabel(data['description'])
         self.files_number_st.SetLabel(str(data['number_files']))
-        self.model_name_st.SetLabel(data['model'])
+        self.transformer_name_st.SetLabel(data['model'])
         self.date_value_st.SetLabel(data['created_at'])
 
 

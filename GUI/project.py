@@ -13,6 +13,7 @@ class Project(wx.Frame):
         super().__init__(parent, title=sanitized_name, size=(900, 700))
 
         self.parent = parent
+        self.CreateStatusBar()
         self._init_ui()
         self.SetMinSize((900, 700))
         self.CenterOnScreen()
@@ -29,7 +30,7 @@ class Project(wx.Frame):
         self.files_lc = wx.ListCtrl(panel, -1)
         self.log_rt = rt.RichTextCtrl(panel, -1, style=wx.TE_READONLY)
 
-        self.info_lc = wx.ListCtrl(panel, -1, size=(300, 220), style=wx.LC_REPORT)
+        self.info_lc = wx.ListCtrl(panel, -1, size=(310, 220), style=wx.LC_REPORT)
         self.info_lc.InsertColumn(0, 'Info', wx.LIST_FORMAT_CENTRE)
         self.info_lc.InsertColumn(1, 'Value', wx.LIST_FORMAT_LEFT)
         self.info_lc.SetColumnWidth(0, 110)
@@ -61,3 +62,56 @@ class Project(wx.Frame):
 
         master_box.Add(vbox, proportion=1, flag=wx.ALL | wx.EXPAND, border=5)
         panel.SetSizer(master_box)
+
+        self._init_menu()
+
+    def _init_menu(self) -> None:
+        '''Initializes the menu.'''
+
+        menu = wx.MenuBar()
+        projects = wx.Menu()
+        chat = wx.Menu()
+        add = wx.Menu()
+        file = wx.Menu()
+        model = wx.Menu()
+        log = wx.Menu()
+
+        # -- Project menu -- #
+        settings = projects.Append(-1, 'Settings', 'Open this project settings.')
+        close_project = projects.Append(-1, 'Close the project', 'Close this project and return to the main screen.')
+
+        # -- Chat menu -- #
+        new_conversation = chat.Append(-1, 'New chat', 'Start a new conversation')
+        save_conversation = chat.Append(-1, 'Save chat', 'Save this chat')
+        delete_conversation = chat.Append(-1, 'Delete chat', 'Delete this chat')
+        chat.AppendSeparator()
+
+        # -- Add menu -- #
+        add_live_recording = add.Append(-1, 'Record from system', 'Record the system audio.')
+        mic_live_recording = add.Append(-1, 'Record from microphone', 'Record from a microphone.')
+        media_files = add.Append(-1, 'Add a file', 'Add a audio or video file.')
+        online_link = add.Append(-1, 'Add a link', 'Add a link from a internet content.')
+
+        # -- File menu -- #
+        settings_file = file.Append(-1, 'File settings', 'Edit this file settings.')
+        save_transcription = file.Append(-1, 'Save transcription', 'Save the file transcription to your computer.')
+        delete_file = file.Append(-1, 'Delete', 'Delete this file.')
+
+        # -- Model menu -- #
+        file_default_model = model.Append(-1, 'File default', 'Uses the file\'s default model.')
+        llama_3_model = model.Append(-1, 'llama-3', 'Use the llama-3 model for all files.')
+        gpt_model = model.Append(-1, 'ChatGPT 3.5', 'Use the ChatGPT 3.5 for all files.')
+
+        # -- Log menu -- #
+        clear_log = log.Append(-1, 'Clear log', 'Clear the log screen.')
+        save_log = log.Append(-1, 'Save log', 'Save the log to a text file.')
+
+        menu.Append(projects, 'Project')
+        menu.Append(chat, 'Chat')
+        menu.Append(add, 'Add media')
+        menu.Append(file, 'File')
+        menu.Append(model, 'Model')
+        menu.Append(log, 'Log')
+
+        self.SetMenuBar(menu)
+

@@ -46,13 +46,13 @@ class StorageManager():
     def update_app_settings(self, dict_path: list[str]) -> bool:
         pass
 
-    def create_project_files(self, sanitized_name: str, description: str, model: str) -> tuple[str, str] | None:
+    def create_project_files(self, sanitized_name: str, description: str, transformer: str) -> tuple[str, str] | None:
         """Create the project files, given a name as typed by the user.
 
         Args:
             name (sanitized_name): Name of the project, sanitized.
             description (str): Description of the project, as typed by the user.
-            model (str): Model chosen by the user.
+            transformer (str): transformer chosen by the user.
 
         Returns:
             tuple[str, str] | None: Rreturns (Name, Path) or None, if any error occurred.
@@ -68,9 +68,10 @@ class StorageManager():
             settings_file = {
                 "name": sanitized_name,
                 "description": description,
-                "needs_processing": False,
                 "number_files": 0,
-                "model": model,
+                "transformer": transformer,
+                "llm": "llama-3",
+                "database": "faiss",
                 "path": path,
                 "created_at": datetime.now().strftime("%Y-%m-%d")
             }
